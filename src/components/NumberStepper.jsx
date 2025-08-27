@@ -2,12 +2,20 @@
 
 function NumberStepper({ value, onChange, error }) {
   const handleIncrement = () => {
-    const newValue = (Number.parseFloat(value) + 0.01).toFixed(2);
+    const currentValue =
+      value === "" || isNaN(Number.parseFloat(value))
+        ? 0
+        : Number.parseFloat(value);
+    const newValue = (currentValue + 0.01).toFixed(2);
     onChange(Number.parseFloat(newValue));
   };
 
   const handleDecrement = () => {
-    const newValue = Number.parseFloat(value) - 0.01;
+    const currentValue =
+      value === "" || isNaN(Number.parseFloat(value))
+        ? 0
+        : Number.parseFloat(value);
+    const newValue = currentValue - 0.01;
     if (newValue >= 0) {
       onChange(Number.parseFloat(newValue.toFixed(2)));
     }
@@ -30,19 +38,22 @@ function NumberStepper({ value, onChange, error }) {
     }
   };
 
+  const displayValue =
+    value === "" || isNaN(Number.parseFloat(value)) ? "" : value;
+
   return (
     <div className="flex items-center space-x-2">
       <button
         type="button"
         onClick={handleDecrement}
         className="w-10 h-10 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        disabled={value <= 0}
+        disabled={displayValue <= 0}
       >
         −
       </button>
       <input
         type="text"
-        value={value}
+        value={displayValue}
         onChange={handleInputChange}
         placeholder="0.00"
         className={`w-24 px-3 py-2 text-center border ${
