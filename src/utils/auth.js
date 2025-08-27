@@ -27,16 +27,39 @@ export const login = async (credentials) => {
 export const logout = async () => {
   try {
     await logoutUser();
+    console.log("[v0] Logout API call successful");
   } catch (error) {
-    console.error("Logout API call failed:", error);
+    console.error("[v0] Logout API call failed:", error);
+    // Continue with logout even if API call fails
   } finally {
     localStorage.removeItem(AUTH_TOKEN_KEY);
-    localStorage.removeItem(USER_DATA_KEY); // Added to remove user data on logout
+    localStorage.removeItem(USER_DATA_KEY);
+    localStorage.removeItem("water_app_user"); // Clear any additional user data
+    console.log("[v0] Local storage cleared");
   }
 };
 
 export const isAuthenticated = () => {
-  return localStorage.getItem(AUTH_TOKEN_KEY) !== null;
+  const token = localStorage.getItem(AUTH_TOKEN_KEY);
+  const userData = localStorage.getItem(USER_DATA_KEY);
+
+  if (!token || !userData) {
+    console.log("[v0] Missing token or user data, redirecting to login");
+    return false;
+  }
+
+  try {
+    // Validate token structure
+    const tokenData = JSON.parse(atob(token));
+    if (!tokenData.email || !tokenData.timestamp) {
+      console.log("[v0] Invalid token structure");
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.log("[v0] Token validation failed:", error);
+    return false;
+  }
 };
 
 export const getUserData = () => {

@@ -27,6 +27,14 @@ export const apiRequest = async (endpoint, options = {}) => {
     const response = await fetch(url, config);
     console.log("[v0] API Response status:", response.status);
 
+    if (response.status === 401) {
+      console.log("[v0] Unauthorized access detected, redirecting to login");
+      localStorage.removeItem("water_app_auth_token");
+      localStorage.removeItem("water_app_user_data");
+      window.location.href = "/login";
+      throw new Error("Unauthorized access");
+    }
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

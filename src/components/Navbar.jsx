@@ -1,14 +1,22 @@
-"use client"
-import { Link, useLocation } from "react-router-dom"
-import { logout } from "../utils/auth.js"
+"use client";
+import { Link, useLocation } from "react-router-dom";
+import { logout } from "../utils/auth.js";
 
 function Navbar() {
-  const location = useLocation()
+  const location = useLocation();
 
-  const handleLogout = () => {
-    logout()
-    window.location.href = "/login"
-  }
+  const handleLogout = async () => {
+    try {
+      console.log("[v0] Initiating logout...");
+      await logout();
+      console.log("[v0] Logout completed, redirecting to login");
+      window.location.href = "/login";
+    } catch (error) {
+      console.error("[v0] Logout error:", error);
+      // Force redirect even if logout fails
+      window.location.href = "/login";
+    }
+  };
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200">
@@ -47,7 +55,7 @@ function Navbar() {
         </div>
       </div>
     </nav>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;

@@ -1,12 +1,13 @@
-import { Navigate } from "react-router-dom"
-import { isAuthenticated } from "../utils/auth.js"
+import { Navigate } from "react-router-dom";
+import { isAuthenticated } from "../utils/auth.js";
 
 function ProtectedRoute({ children }) {
   if (!isAuthenticated()) {
-    return <Navigate to="/login" replace />
+    console.log("[v0] Authentication failed, redirecting to login");
+    return <Navigate to="/login" replace />;
   }
 
-  return children
+  return children;
 }
 
-export default ProtectedRoute
+export default ProtectedRoute;
