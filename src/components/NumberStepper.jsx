@@ -1,23 +1,34 @@
-"use client"
+"use client";
 
 function NumberStepper({ value, onChange, error }) {
   const handleIncrement = () => {
-    onChange(Number.parseFloat(value) + 1)
-  }
+    const newValue = (Number.parseFloat(value) + 0.01).toFixed(2);
+    onChange(Number.parseFloat(newValue));
+  };
 
   const handleDecrement = () => {
-    const newValue = Number.parseFloat(value) - 1
+    const newValue = Number.parseFloat(value) - 0.01;
     if (newValue >= 0) {
-      onChange(newValue)
+      onChange(Number.parseFloat(newValue.toFixed(2)));
     }
-  }
+  };
 
   const handleInputChange = (e) => {
-    const inputValue = e.target.value
-    if (inputValue === "" || (!isNaN(inputValue) && Number.parseFloat(inputValue) >= 0)) {
-      onChange(inputValue === "" ? 0 : Number.parseFloat(inputValue))
+    const inputValue = e.target.value;
+
+    // Allow empty input
+    if (inputValue === "") {
+      onChange("");
+      return;
     }
-  }
+
+    // Check if input matches pattern for up to 2 decimal places
+    const decimalPattern = /^\d*\.?\d{0,2}$/;
+
+    if (decimalPattern.test(inputValue) && Number.parseFloat(inputValue) >= 0) {
+      onChange(inputValue);
+    }
+  };
 
   return (
     <div className="flex items-center space-x-2">
@@ -30,11 +41,10 @@ function NumberStepper({ value, onChange, error }) {
         −
       </button>
       <input
-        type="number"
+        type="text"
         value={value}
         onChange={handleInputChange}
-        min="0"
-        step="0.1"
+        placeholder="0.00"
         className={`w-24 px-3 py-2 text-center border ${
           error ? "border-red-300" : "border-gray-300"
         } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
@@ -47,7 +57,7 @@ function NumberStepper({ value, onChange, error }) {
         +
       </button>
     </div>
-  )
+  );
 }
 
-export default NumberStepper
+export default NumberStepper;
